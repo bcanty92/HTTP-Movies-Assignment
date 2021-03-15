@@ -71,7 +71,45 @@ body {
   background-color: lightskyblue;
 }
 
+.edit-button {
+  padding: 5px 10px;
+  width: 100px;
+  background-color: lightskyblue;
+}
+
 .movie-warning {
   color: red;
   text-align: center;
+}
+
+.update-movie {
+  background-color: #fff;
+  border: 0;
+  box-shadow: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0, 0, 0, 0.12),
+    0 2px 4px rgba(0, 0, 0, 0.24);
+  padding: 1rem;
+  cursor: pointer;
+  position: relative;
+  margin: 1rem auto;
+  width: 30%;
+  height: 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  /* text-align: center; */
+}
+
+.update-movie label {
+  color: rgb(161, 161, 161);
+}
+
+.update-movie input {
+  border: none;
+  border-bottom: 1px solid rgb(209, 209, 209);
+}
+
+.update-movie button {
+  margin-top: 10%;
+  margin-left: 25%;
 }
