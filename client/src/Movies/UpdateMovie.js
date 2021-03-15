@@ -1,99 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useHistory } from 'react-router-dom';
 
+export const MovieUpdate = props => {
+    const [updateMovie, setUpdateMovie] = useState({
+        id: new Date(),
+        title: '',
+        director: '',
+        metascore: '',
+        stars: []
+    });
 
-const initialItem = {
-	title: "",
-	director: "",
-	metascore: "",
-	stars: []
-};
+    let thisURL = (window.location.href).split('').pop();
 
-const UpdateMovie = props => {
-    const  {push} = useHistory();
-    const {id} = useParams();
-    const [movie, setMovie] = useState(initialItem)
-
-    useEffect(() =>{
-        const movieToUpdate = props.movieList.find(thing => `${thing.id}` === id);
-
-        if(movieToUpdate){
-            setMovie(movieToUpdate);
-        }
-    }, [props.setMovie, id])
-
-    const changeHandler = e => {
-        e.persist();
-        let targetValue = e.target.value
-
-        if(e.target.name === 'metascores'){
-            targetValue = parseInt(targetValue, 10);
-        }else if (e.target.name === 'stars'){
-            targetValue = targetValue.split(',')
-        }
-
-        setMovie({
-            ...movie,[e.target.name]: targetValue
-        });
-    };
+    useEffect(() => {
+        axios
+            .get(`http://localhost:3333/api/movies/${thisURL}`)
+            .then(res => setUpdateMovie(res.data))
+            .catch(err => console.log(err));
+      }, []);
 
     const handleSubmit = e => {
         e.preventDefault();
-        axios.put(`http://localhost:5000/api/movies/${id}`, movie)
-        .then(res => {
-            console.log(res)
-            props.getMovieList();
-            push(`/movies/${id}`);
-        })
-        .catch(err => console.log(err));
-    }
+        axios
+            .put(`http://localhost:3333/api/movies/${updateMovie.id}`, updateMovie)
+            .then(res => setUpdateMovie(res.data))
+            .catch(err => console.log(err));
+    };
+
+    const handleChange = e => {
+        e.preventDefault();
+        setUpdateMovie({ ...updateMovie, [e.target.name]: e.target.value});
+    };
 
     return (
-        <>
-            <h2>Update Movie</h2>
-
+        <div className='update-movie'>
+            <h3>Update Movie</h3>
             <form onSubmit={handleSubmit}>
+                <label for='title'>Movie Title</label>
+                <br/>
                 <input
-                    type="text"
-                    name="title"
-                    onChange={changeHandler}
-                    placeholder="Title"
-                    value={movie.title}
+                name="title"
+                type="text"
+                value={updateMovie.title}
+                onChange={handleChange}
                 />
-
-
+                <br/>
+                <label for='director'>Director</label>
+                <br/>
                 <input
-                    type="text"
-                    name="director"
-                    onChange={changeHandler}
-                    placeholder="Director"
-                    value={movie.director}
+                name="director"
+                type="text"
+                value={updateMovie.director}
+                onChange={handleChange}
                 />
-
-
+                <br/>
+                <label for='metascore'>Metascore</label>
+                <br/>
                 <input
-                    type="number"
-                    name="metascore"
-                    onChange={changeHandler}
-                    placeholder="Metascore"
-                    value={movie.metascore}
+                name="metascore"
+                type="text"
+                value={updateMovie.metascore}
+                onChange={handleChange}
                 />
-
-
-                <input
-                    type="string"
-                    name="stars"
-                    onChange={changeHandler}
-                    placeholder="Stars"
-                    value={movie.stars}
-                />
-
-                <button type="submit">Edit</button>
+                <br/>
+                <button type='submit'>Submit</button>
             </form>
-
-        </>
+        </div>
     )
-}
-
-export default UpdateMovie;
+};
